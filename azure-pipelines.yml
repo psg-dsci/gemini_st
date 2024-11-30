@@ -2,7 +2,9 @@ trigger:
 - main  # Automatically trigger the pipeline on changes to the main branch
 
 pool:
-  vmImage: 'ubuntu-latest'  # Use an Ubuntu agent
+  name: VM  # Use your self-hosted agent pool
+  demands:
+    - agent.name == kingsrock  # Specify the self-hosted agent name
 
 steps:
 - task: UsePythonVersion@0
@@ -13,14 +15,14 @@ steps:
 - script: |
     echo "Installing dependencies..."
     python -m pip install --upgrade pip
-    pip install -r requirements.txt
+    pip install -r requirements.txt  # Install dependencies from the requirements.txt file
   displayName: 'Install Python dependencies'
 
 - script: |
     echo "Running Streamlit app for testing..."
-    streamlit run app.py --server.headless true
+    streamlit run app.py --server.headless true  # Run the Streamlit app in headless mode
   displayName: 'Run Streamlit App (Headless)'
 
 - script: |
-    echo "Pipeline execution completed successfully!"
+    echo "Pipeline execution completed successfully!"  # Final message
   displayName: 'Finish Pipeline'
