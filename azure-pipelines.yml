@@ -2,25 +2,38 @@ trigger:
   - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'myagent' # Use your custom agent pool name if using a self-hosted agent. If hosted, replace with vmImage.
 
 steps:
+  # Step 1: Set up Python
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.x'
       addToPath: true
+    displayName: 'Set up Python'
 
+  # Step 2: Install Dependencies
   - script: |
       python -m pip install --upgrade pip
       pip install -r requirements.txt
     displayName: 'Install Dependencies'
 
+  # Step 3: Run Tests (Optional, add if you have tests)
+  - script: |
+      pytest --junitxml=test-results.xml
+    displayName: 'Run Tests'
+    continueOnError: true # Set to false if you want the pipeline to fail on test errors
+    condition: succeeded()
+
+  # Step 4: Archive the App
   - script: |
       zip -r app.zip .
-    displayName: 'Archive App'
+    displayName: 'Archive Application'
 
+  # Step 5: Deploy to Azure Web App
   - task: AzureWebApp@1
     inputs:
-      azureSubscription: 'azure-st'
-      appName: 'psgds-cvg0e3c5f5geahcy'
+      azureSubscription: 'azure-st'  # Service connection for Azure
+      appName: 'psgds-cvg0e3c5f5geahcy'  # Azure Web App Name
       package: $(System.DefaultWorkingDirectory)/app.zip
+    displayName: 'Deploy to Azure Web App'
