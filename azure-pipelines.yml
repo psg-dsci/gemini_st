@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'  # Use an Ubuntu agent
 
 steps:
-- task: UsePythonVersion@1
+- task: UsePythonVersion@0
   inputs:
     versionSpec: '3.12'  # Specify the required Python version
     addToPath: true
