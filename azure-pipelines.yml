@@ -4,7 +4,7 @@ trigger:
 pool:
   name: VM  # Use your self-hosted agent pool
   demands:
-    - agent.name == kingsrock  # Specify the self-hosted agent name
+    - agent.name -equals kingsrock  # Corrected format to match the self-hosted agent by name
 
 steps:
 - task: UsePythonVersion@0
